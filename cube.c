@@ -90,7 +90,7 @@ void render() {
     double z_buffer[WINDOW_Y][WINDOW_X];
     for (int y = 0; y < WINDOW_Y; y++) {
         for (int x = 0; x < WINDOW_X; x++) {
-            z_buffer[y][x] = -10.0;
+            z_buffer[y][x] = -1e9;
         }
     }
 
@@ -113,13 +113,11 @@ void render() {
     double temp_view_coords [MODEL_ROWS][SIZE];
     double temp_view_coords2 [MODEL_ROWS][SIZE];
     double view_coords [MODEL_ROWS][SIZE];
+    double pixel_coords [MODEL_ROWS][SIZE];
     for(int i = 0; i < MODEL_ROWS; ++i){
         mult_mat_vec(temp_view_coords[i], x_rotation_matrix, model_coords[i]); 
         mult_mat_vec(temp_view_coords2[i], y_rotation_matrix, temp_view_coords[i]); 
         mult_mat_vec(view_coords[i], model_view, temp_view_coords2[i]);
-    }
-    double pixel_coords [MODEL_ROWS][SIZE];
-    for(int i = 0; i < MODEL_ROWS; ++i){
         mult_mat_vec(pixel_coords[i], viewport, view_coords[i]);
     }
 
@@ -199,7 +197,7 @@ void render() {
         for(int j = 0; j < WINDOW_X; ++j) {
             double curr_z = z_buffer[i][j];
             //8 ascii outputs
-            //';+O#&@$
+            //';+O#$&@
             //as it goes to the right more color
             //divide by 8 to get 0.375 intervals
             int bucket = (int)((curr_z - smallest_z) / (biggest_z - smallest_z) * 8);
@@ -221,13 +219,13 @@ void render() {
                     printf("#");
                     break;
                 case 5:
-                    printf("&");
+                    printf("$");
                     break;
                 case 6:
-                    printf("@");
+                    printf("&");
                     break;
                 case 7:
-                    printf("$");
+                    printf("@");
                     break;
                 default:
                     printf(" ");
@@ -249,9 +247,6 @@ void render() {
 
 
 int main() {
-
-    
-
     while(true){
         render();
         // sleep_ms(500);
